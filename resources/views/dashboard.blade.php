@@ -61,12 +61,12 @@
                         <!-- Recent Activity -->
                         <div class="bg-white dark:bg-[#161615] rounded-lg shadow-sm border border-[#e3e3e0] dark:border-[#3E3E3A] p-6">
                             <h2 class="text-xl font-semibold mb-4">Aktivitas Terkini</h2>
-                            <div class="space-y-4">
-                                <div class="pb-4 border-b border-[#e3e3e0] dark:border-[#3E3E3A]">
+                            <div>
+                                <div class="pb-4 mb-4 border-b border-[#e3e3e0] dark:border-[#3E3E3A]">
                                     <p class="font-medium mb-1">Permohonan KTP Baru</p>
                                     <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">5 menit yang lalu</p>
                                 </div>
-                                <div class="pb-4 border-b border-[#e3e3e0] dark:border-[#3E3E3A]">
+                                <div class="pb-4 mb-4 border-b border-[#e3e3e0] dark:border-[#3E3E3A]">
                                     <p class="font-medium mb-1">Surat Keterangan Domisili</p>
                                     <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">15 menit yang lalu</p>
                                 </div>
