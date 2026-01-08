@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'spbe' => [
+        'api_url' => env('TAUVAL_API_URL'),
+        'api_key' => env('TAUVAL_API_KEY'),
+    ],
+
+    'sia' => [
+        'api_url' => env('SIA_API_URL'),
+        'api_key' => env('SIA_API_KEY'),
+    ],
+
 ];

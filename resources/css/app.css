@@ -6,6 +6,33 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Fonts */
+    --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-family-serif: 'Playfair Display', ui-serif, Georgia, Cambria, serif;
+
+    /* PANRB Brand Colors */
+    --color-panrb-blue: #1a365d;
+    --color-panrb-blue-dark: #0f2544;
+    --color-panrb-gold: #c9a227;
+    --color-panrb-gold-light: #d4af37;
+}
+
+/* Custom styles */
+.caption {
+    transition: opacity 0.7s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.caption:first-child {
+    position: relative;
+    opacity: 1;
+}
+
+.slider-dot:hover {
+    transform: scaleY(1.5);
 }

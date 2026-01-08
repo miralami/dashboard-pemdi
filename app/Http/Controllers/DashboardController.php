@@ -14,9 +14,16 @@ class DashboardController extends Controller
         $this->dashboardService = $dashboardService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->dashboardService->getDashboardData();
+        $kode = $request->input('kode');
+
+        if (!$kode) {
+            // If no institution code, redirect to home page
+            return redirect('/');
+        }
+
+        $data = $this->dashboardService->getDashboardData($kode);
 
         return view('dashboard', compact('data'));
     }

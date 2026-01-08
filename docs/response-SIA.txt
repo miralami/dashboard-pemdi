@@ -1,0 +1,29 @@
+{
+    "status": "success",
+    "message": "Data rekapitulasi berhasil diambil",
+    "timestamp": "2026-02-08T06:42:13+00:00",
+    "results": {
+        "4": [
+            {
+                "id_kategori_instansi": 4,
+                "instansi": "X Institution",
+                "id_daerah": 1,
+                "tingkat_kematangan": 3,
+                "proses_bisnis_as_is": 122,
+                "layanan_as_is": 114,
+                "data_info_as_is": 358,
+                "aplikasi_as_is": 66,
+                "infra_as_is": 15,
+                "keamanan_as_is": 2,
+                "proses_bisnis_to_be": 8,
+                "layanan_to_be": 8,
+                "data_info_to_be": 22,
+                "aplikasi_to_be": 13,
+                "infra_to_be": 1,
+                "keamanan_to_be": 0,
+                "peta_rencana": true,
+                "clearance": false,
+                "reviueval": false
+            },
+
+and the list goes on

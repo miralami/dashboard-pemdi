@@ -7,6 +7,128 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Dashboard PEMDI
+
+A Laravel-based dashboard application with encrypted environment variables for enhanced security.
+
+## 🚀 Quick Start (Running the Application)
+
+If the project is already set up:
+
+```bash
+# 1. Start the development server
+npx dotenvx run -- php artisan serve
+
+# 2. Visit http://localhost:8000/dashboard
+```
+
+### Fetch SPBE Data from API
+
+```bash
+# Fetch all historical data (2019 to 2024, year by year)
+npx dotenvx run -- php artisan spbe:fetchalltime
+
+# Fetch all years (from 2020 by default, no params)
+npx dotenvx run -- php artisan spbe:fetch
+
+# Fetch specific year range
+npx dotenvx run -- php artisan spbe:fetch --awal=2022 --akhir=2024
+
+# Fetch from specific year onwards
+npx dotenvx run -- php artisan spbe:fetch --awal=2023
+```
+
+**Scheduled Task**: The SPBE data is automatically fetched daily at 1:00 AM. Make sure your Laravel scheduler is running:
+```bash
+npx dotenvx run -- php artisan schedule:work
+```
+
+**Required Environment Variables**:
+- `TAUVAL_API_URL` - The SPBE API endpoint
+- `TAUVAL_API_KEY` - Your API key (sent as `code` header)
+
+---
+
+## 🔐 Environment Variable Encryption
+
+This project uses [dotenvx](https://dotenvx.com) to encrypt sensitive environment variables, protecting secrets from being exposed in your codebase or to AI coding assistants.
+
+### Why Encrypt Environment Variables?
+
+- **Security**: Prevents exposure of sensitive credentials (database passwords, API keys, etc.)
+- **Version Control Safety**: Encrypted `.env` files can be safely committed to git
+- **AI Assistant Protection**: Tools like GitHub Copilot cannot read your actual secrets
+- **Team Collaboration**: Share encrypted configs safely; only authorized users with the private key can decrypt
+
+### Setup Instructions
+
+1. **Install dotenvx**:
+   ```bash
+   npm install @dotenvx/dotenvx --save
+   ```
+
+2. **Encrypt your `.env` file**:
+   ```bash
+   npx dotenvx encrypt
+   ```
+   This creates:
+   - Encrypted `.env` file with cipher text
+   - `.env.keys` file containing the private decryption key
+
+3. **Protect the private key**:
+   The `.env.keys` file is already in `.gitignore` - **never commit this file!**
+
+### Usage
+
+**Running the application** (automatically decrypts):
+```bash
+npx dotenvx run -- php artisan serve
+```
+
+**Or set the private key as an environment variable**:
+```bash
+# Windows PowerShell
+$env:DOTENV_PRIVATE_KEY='your-private-key-here'
+php artisan serve
+
+# Linux/macOS
+DOTENV_PRIVATE_KEY='your-private-key-here' php artisan serve
+```
+
+### Managing Environment Variables
+
+**Add a new variable**:
+```bash
+npx dotenvx set NEW_KEY "new value"
+```
+
+**Edit multiple variables**:
+```bash
+# Decrypt temporarily
+npx dotenvx decrypt
+
+# Edit .env file with your changes
+
+# Re-encrypt
+npx dotenvx encrypt
+```
+
+**View current values** (requires private key):
+```bash
+npx dotenvx get KEY_NAME
+```
+
+### Important Notes
+
+- ✅ `.env` (encrypted) - safe to commit
+- ❌ `.env.keys` (private key) - **NEVER commit this!**
+- 🔑 Store the private key securely (password manager, environment variables, secrets vault)
+- 🔄 Run all Laravel commands through `npx dotenvx run --` to auto-decrypt
+
+For more information, visit [dotenvx documentation](https://dotenvx.com/docs).
+
+---
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

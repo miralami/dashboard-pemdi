@@ -27,22 +27,30 @@ class DashboardSeeder extends Seeder
                 'value' => 2,
                 'new' => 0
             ],
-            'maturityIndex' => [
-                'labels' => ['Tata Kelola', 'Manajemen', 'Layanan', 'Kebijakan'],
+            'implementationIndex' => [
+                'labels' => ['Kebijakan SPBE', 'Tata Kelola SPBE', 'Manajemen SPBE', 'Layanan SPBE'],
                 'datasets' => [
                     [
                         'label' => 'Instansi',
                         'data' => [3.5, 4.2, 3.8, 4.5],
-                        'backgroundColor' => 'rgba(255, 206, 86, 0.2)',
-                        'borderColor' => 'rgba(255, 206, 86, 1)',
-                        'pointBackgroundColor' => 'rgba(255, 206, 86, 1)',
+                        'backgroundColor' => 'rgba(234, 179, 8, 0.5)',
+                        'borderColor' => 'rgb(234, 179, 8)',
+                        'borderWidth' => 2,
+                        'pointBackgroundColor' => 'rgb(234, 179, 8)',
+                        'pointBorderColor' => '#fff',
+                        'pointHoverBackgroundColor' => '#fff',
+                        'pointHoverBorderColor' => 'rgb(234, 179, 8)',
                     ],
                     [
                         'label' => 'Nasional',
                         'data' => [2.5, 3.0, 2.8, 3.2],
-                        'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
-                        'borderColor' => 'rgba(54, 162, 235, 1)',
-                        'pointBackgroundColor' => 'rgba(54, 162, 235, 1)',
+                        'backgroundColor' => 'rgba(37, 92, 153, 0.5)',
+                        'borderColor' => 'rgb(37, 92, 153)',
+                        'borderWidth' => 2,
+                        'pointBackgroundColor' => 'rgb(37, 92, 153)',
+                        'pointBorderColor' => '#fff',
+                        'pointHoverBackgroundColor' => '#fff',
+                        'pointHoverBorderColor' => 'rgb(37, 92, 153)',
                     ]
                 ]
             ],

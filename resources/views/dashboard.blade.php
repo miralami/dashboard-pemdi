@@ -8,7 +8,26 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        html { background: #1f4e8c !important; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #1f4e8c !important;
+            background-image: none !important;
+            background-size: 0 0 !important;
+            position: relative;
+        }
+        /* Hard override to hide any residual page background images */
+        *, body, html, main, #app, .min-h-screen, .bg-brand {
+            background-image: none !important;
+            background-size: 0 0 !important;
+            background-repeat: no-repeat !important;
+            background-position: center center !important;
+        }
+        /* Remove any ::before/::after backgrounds that could inject images */
+        body::before, body::after, html::before, html::after, main::before, main::after {
+            background: none !important;
+            content: '';
+        }
         :root { --brand: #255c99; }
         .bg-brand { background-color: var(--brand); }
         .text-brand { color: var(--brand); }
@@ -16,15 +35,29 @@
         .sidebar-link:hover { background-color: #f3f4f6; color: #255c99; }
         .sidebar-link.active { background-color: #eff6ff; color: #255c99; border-left: 3px solid #255c99; }
         .sidebar-collapsed .sidebar-expanded-only { display: none; }
-        .sidebar-collapsed .sidebar-link { justify-content: center; padding-left: 0.75rem; padding-right: 0.75rem; }
+            .sidebar-collapsed .sidebar-link { justify-content: center; padding-left: 0.75rem; padding-right: 0.75rem; }
         .sidebar-collapsed .sidebar-link svg { margin-right: 0 !important; }
+
+        /* KPI cards: tighter, consistent typography */
+        .kpi-card { padding: 0.35rem 0.55rem; }
+        .kpi-label { font-size: 10px; color: #64748b; }
+        .kpi-value { font-size: 16px; font-weight: 700; line-height: 1.05; color: #0f172a; }
+        .kpi-unit { font-size: 11px; font-weight: 500; color: #94a3b8; }
+        .kpi-sub { font-size: 10px; font-weight: 600; }
+
+        /* Recommendation cards: slightly smaller text */
+        .reco-card { padding: 0.35rem 0.45rem; }
+        .reco-title { font-size: 9px; font-weight: 700; color: #0f172a; line-height: 1.2; }
+        .reco-desc { font-size: 8px; color: #475569; line-height: 1.2; }
     </style>
 </head>
 <body class="bg-brand text-slate-800">
 
-    <div class="flex min-h-screen">
+    <div class="fixed inset-0 bg-brand" style="z-index:1;"></div>
+
+    <div class="flex min-h-screen relative" style="z-index:2;">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar-collapsed w-16 bg-white h-screen sticky top-0 flex flex-col justify-between border-r border-slate-200 shrink-0 transition-[width] duration-200">
+        <aside id="sidebar" class="sidebar-collapsed w-16 bg-white h-screen sticky top-0 flex flex-col justify-between border-r border-slate-200 shrink-0 transition-[width] duration-200 z-10">
             <div>
                 <div class="p-3 flex items-center gap-2 border-b border-slate-100">
                     <img src="{{ asset('images/LogoPANRB.png') }}" alt="Logo PANRB" class="h-8 w-8 object-contain">
@@ -57,7 +90,7 @@
             </div>
 
             <div class="p-3">
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-700 rounded-lg hover:bg-slate-50">
+                <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-700 rounded-lg hover:bg-slate-50">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                     <span class="sidebar-expanded-only">Keluar</span>
                 </a>
@@ -65,7 +98,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-3">
+        <main class="flex-1 p-3 relative z-10">
             <!-- Header -->
             <div class="flex justify-between items-start mb-3 text-white">
                 <h1 class="text-lg font-bold max-w-3xl">Dashboard Pemerintah Digital Kementerian Koordinator Bidang Politik dan Keamanan</h1>
@@ -82,59 +115,67 @@
             </div>
 
             <!-- Grid Layout -->
-            <div class="grid grid-cols-12 gap-2">
+            <div class="grid grid-cols-12 gap-2" style="grid-template-rows: 0.35fr 0.5fr 0.5fr 0.5fr;">
 
                 <!-- Row 1 -->
                 <!-- Profile Card -->
-                <div class="col-span-4 col-start-1 row-start-1 bg-white rounded-xl p-2 h-20 flex items-center gap-3 shadow-sm">
-                    <div class="h-12 w-12 shrink-0">
-                        <img src="{{ asset('images/Kemenkopolkam.svg') }}" alt="Kemenkopolkam" class="h-full w-full object-contain">
+                <div class="col-span-4 col-start-1 row-start-1 bg-white rounded-xl p-1.5 flex items-center gap-2 shadow-sm min-h-[3.25rem]">
+                    <div class="h-10 w-10 shrink-0">
+                        <img src="{{ asset('images/Kemenkopolkam.svg') }}" alt="Kemenkopolkam" class="h-10 w-10 max-w-10 max-h-10 object-contain">
                     </div>
                     <div>
-                        <h2 class="text-sm font-bold text-brand mb-0.5">{{ $data['profile']['name'] }}</h2>
-                        <p class="text-[11px] text-slate-500">{{ $data['profile']['minister'] }}</p>
+                        <h2 class="text-sm font-bold text-brand leading-tight">{{ $data['profile']['name'] ?? 'Nama Instansi' }}</h2>
+                        <p class="text-[11px] text-slate-500 leading-tight">{{ $data['profile']['minister'] ?? '-' }}</p>
                     </div>
                 </div>
 
                 <!-- SPBE Index -->
-                <div class="col-span-2 col-start-5 row-start-1 bg-white rounded-xl p-2 h-20 shadow-sm relative overflow-hidden">
+                <div class="col-span-2 col-start-5 row-start-1 bg-white rounded-xl kpi-card shadow-sm relative overflow-hidden min-h-[3.25rem] flex flex-col justify-between">
                     <div class="flex items-start justify-between">
                         <div>
-                            <div class="text-xs text-slate-500 mb-1 flex items-center gap-1">
+                            <div class="kpi-label mb-0.5 flex items-center gap-1">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
                                 Nilai Indeks SPBE
                             </div>
-                            <div class="text-base font-bold text-slate-800">{{ number_format($data['spbeIndex']['value'], 2, ',', '.') }} <span class="text-[11px] font-normal text-slate-400">Indeks</span></div>
-                            <div class="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-[11px] rounded font-medium">{{ $data['spbeIndex']['label'] }}</div>
+                            <div class="kpi-value">{{ number_format($data['spbeIndex']['value'], 2, ',', '.') }} <span class="kpi-unit">Indeks</span></div>
+                            <div class="inline-block px-2 py-px bg-blue-100 text-blue-700 text-[9.5px] rounded font-medium">{{ $data['spbeIndex']['label'] }}</div>
                         </div>
                     </div>
                     <!-- Decorative background shape -->
-                    <div class="absolute -bottom-4 -right-4 w-12 h-12 bg-blue-50 rounded-full opacity-50"></div>
+                    <div class="absolute -bottom-4 -right-4 w-12 h-12 bg-blue-50 rounded-full opacity-40"></div>
                 </div>
 
                 <!-- Total Applications -->
-                <div class="col-span-2 col-start-7 row-start-1 bg-white rounded-xl p-2 h-20 shadow-sm relative overflow-hidden">
-                    <div class="text-xs text-slate-500 mb-1 flex items-center gap-1">
+                <div class="col-span-2 col-start-7 row-start-1 bg-white rounded-xl kpi-card shadow-sm relative overflow-hidden min-h-[3.25rem] flex flex-col justify-between">
+                    <div class="kpi-label mb-0.5 flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                         Total Aplikasi
                     </div>
-                    <div class="text-base font-bold text-slate-800">{{ $data['totalApplications']['value'] }} <span class="text-[11px] font-normal text-slate-400">Aplikasi</span></div>
-                    <div class="text-[11px] text-green-600 font-medium">+{{ $data['totalApplications']['new'] }} Aplikasi Tahun Ini</div>
+                    <div class="kpi-value">{{ $data['totalApplications']['value'] }} <span class="kpi-unit">Aplikasi</span></div>
+                    <div class="kpi-sub text-green-600">+{{ $data['totalApplications']['new'] }} Aplikasi Tahun Ini</div>
                 </div>
 
                 <!-- Capaian Indeks (Radar) - spans Row 1 & 2 -->
                 <div class="col-span-4 col-start-9 row-start-1 row-span-2 bg-white rounded-xl p-2 shadow-sm flex flex-col">
                     <div class="text-xs font-bold text-brand mb-1 flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        Capaian Indeks Kematangan
+                        Capaian Indeks Implementasi Arsitektur SPBE
                     </div>
-                    <div class="flex-1 relative">
-                        <canvas id="maturityChart"></canvas>
+                    @if(!empty($data['implementationIndex']['labels']) && !empty($data['implementationIndex']['datasets']))
+                    <div class="flex-1 flex gap-2">
+                        <div class="flex-1 relative" style="min-height: 200px;">
+                            <canvas id="implementationChart"></canvas>
+                        </div>
+                        <div class="flex flex-col justify-center gap-2 pr-2">
+                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> <span class="text-[10px]">Instansi</span></div>
+                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background-color: rgb(37, 92, 153);"></span> <span class="text-[10px]">Nasional</span></div>
+                        </div>
                     </div>
-                    <div class="flex justify-center gap-4 mt-1 text-[10px]">
-                        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> Instansi</div>
-                        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Nasional</div>
+                    @else
+                    <div class="flex-1 flex items-center justify-center text-slate-400 text-sm">
+                        Data tidak ditemukan
                     </div>
+                    @endif
                 </div>
 
                 <!-- Row 2 -->
@@ -146,6 +187,7 @@
                     </div>
 
                     <div class="rounded-lg border border-slate-100 overflow-hidden flex-1">
+                        @if(!empty($data['governanceStatus']))
                         <div class="h-full overflow-y-auto">
                             <table class="w-full text-xs">
                                 <thead class="bg-brand text-white">
@@ -168,16 +210,25 @@
                                 </tbody>
                             </table>
                         </div>
+                        @else
+                        <div class="flex items-center justify-center h-full text-slate-400 text-sm">
+                            Data tidak ditemukan
+                        </div>
+                        @endif
                     </div>
                 </div>
 
                 <!-- Recommendations -->
-                <div class="col-span-4 col-start-5 row-start-2 bg-white rounded-xl p-1 shadow-sm">
-                    <div class="text-xs font-bold text-brand mb-1">Rekomendasi Tindakan</div>
-                    <div class="space-y-1">
+                <div class="col-span-4 col-start-5 row-start-2 bg-white rounded-xl p-2 shadow-sm flex flex-col">
+                    <div class="text-xs font-bold text-brand mb-1 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Rekomendasi Tindakan
+                    </div>
+                    @if(!empty($data['recommendations']))
+                    <div class="space-y-1.5">
                         @foreach(array_slice($data['recommendations'], 0, 2) as $rec)
-                        <div class="border border-slate-200 rounded-lg p-1.5 flex items-start gap-2">
-                            <div class="p-1 bg-slate-100 rounded-lg text-slate-600">
+                        <div class="border border-slate-200 rounded-lg reco-card flex items-start gap-2 bg-white">
+                            <div class="p-1 bg-slate-100 rounded-lg text-slate-600 shrink-0">
                                 @if($rec['icon'] == 'lock')
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                 @else
@@ -185,36 +236,48 @@
                                 @endif
                             </div>
                             <div>
-                                <div class="text-[10px] font-bold text-slate-800">{{ $rec['title'] }}</div>
-                                <div class="text-[9px] text-slate-500">{{ $rec['description'] }}</div>
+                                <div class="reco-title">{{ $rec['title'] }}</div>
+                                <div class="reco-desc">{{ $rec['description'] }}</div>
                             </div>
                         </div>
                         @endforeach
                     </div>
+                    @else
+                    <div class="flex-1 flex items-center justify-center text-slate-400 text-sm">
+                        Data tidak ditemukan
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Row 3: Tren Indeks SPBE + Pemdi (side-by-side) -->
                 <!-- Tren Indeks SPBE -->
-                <div class="col-span-4 col-start-5 row-start-3 bg-white rounded-xl p-2 shadow-sm">
+                <div class="col-span-4 col-start-5 row-start-3 bg-white rounded-xl p-2 shadow-sm flex flex-col">
                     <div class="text-xs font-bold text-brand mb-1 flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                         Tren Indeks SPBE
                     </div>
+                    @if(!empty($data['spbeTrend']['labels']) && !empty($data['spbeTrend']['datasets']))
                     <div class="h-40">
                         <canvas id="spbeChart"></canvas>
                     </div>
                     <div class="flex justify-center gap-4 mt-1 text-[10px]">
-                        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> Instansi</div>
-                        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-300"></span> Nasional</div>
+                        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background-color: rgb(37, 92, 153);"></span> Indeks SPBE</div>
+                        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background-color: rgb(234, 179, 8);"></span> Nasional</div>
                     </div>
+                    @else
+                    <div class="flex-1 flex items-center justify-center text-slate-400 text-sm">
+                        Data tidak ditemukan
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Tren Indeks Pemdi -->
-                <div class="col-span-4 col-start-9 row-start-3 bg-white rounded-xl p-2 shadow-sm">
+                <div class="col-span-4 col-start-9 row-start-3 bg-white rounded-xl p-2 shadow-sm flex flex-col">
                     <div class="text-xs font-bold text-brand mb-1 flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                         Tren Indeks Pemdi
                     </div>
+                    @if(!empty($data['pemdiTrend']['labels']) && !empty($data['pemdiTrend']['datasets']))
                     <div class="h-40">
                         <canvas id="pemdiChart"></canvas>
                     </div>
@@ -222,12 +285,21 @@
                         <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> Instansi</div>
                         <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-300"></span> Nasional</div>
                     </div>
+                    @else
+                    <div class="flex-1 flex items-center justify-center text-slate-400 text-sm">
+                        Data tidak ditemukan
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Row 4 -->
                 <!-- Budget -->
-                <div class="col-span-9 col-start-1 row-start-4 bg-white rounded-xl p-2 shadow-sm">
-                    <div class="text-xs font-bold text-brand mb-1">Anggaran Belanja SPBE</div>
+                <div class="col-span-9 col-start-1 row-start-4 bg-white rounded-xl p-2 shadow-sm flex flex-col">
+                    <div class="text-xs font-bold text-brand mb-1 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.6 1M12 8V6m0 0V4m0 2c-1.11 0-2.08.402-2.6 1M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z"/></svg>
+                        Anggaran Belanja SPBE
+                    </div>
+                    @if(!empty($data['budget']['labels']) && !empty($data['budget']['datasets']))
                     <div class="h-32">
                         <canvas id="budgetChart" class="w-full h-full"></canvas>
                     </div>
@@ -236,17 +308,26 @@
                         <div class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-yellow-400"></span> Anggaran Disetujui</div>
                         <div class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-red-800"></span> Anggaran Ditunda</div>
                     </div>
+                    @else
+                    <div class="flex-1 flex items-center justify-center text-slate-400 text-sm">
+                        Data tidak ditemukan
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Domain Changes -->
-                <div class="col-span-3 col-start-10 row-start-4 bg-white rounded-xl p-2 shadow-sm">
+                <div class="col-span-3 col-start-10 row-start-4 bg-white rounded-xl p-2 shadow-sm flex flex-col">
                     <div class="flex justify-between items-center mb-1">
-                        <div class="text-xs font-bold text-brand">Perubahan Domain Per Tahun</div>
+                        <div class="text-xs font-bold text-brand flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h4l2 3h6a1 1 0 01.894.553l2 4a1 1 0 010 .894l-2 4A1 1 0 0116 16H9l-2-3H4a1 1 0 01-1-1V4z"/></svg>
+                            Perubahan Domain Per Tahun
+                        </div>
                         <button class="px-2 py-0.5 bg-yellow-400 text-[10px] font-bold rounded text-slate-900">Saring</button>
                     </div>
-                    <div class="grid grid-cols-2 gap-1">
+                    @if(!empty($data['domainChanges']))
+                    <div class="grid grid-cols-2 gap-1.5">
                         @foreach($data['domainChanges'] as $domain)
-                        <div class="border border-slate-200 rounded p-1.5 flex items-center justify-between">
+                        <div class="border border-slate-200 rounded p-2 flex items-center justify-between bg-white shadow-xs">
                             <div class="flex items-center gap-2">
                                 <div class="w-6 h-6 rounded border border-slate-200 flex flex-col items-center justify-center">
                                     @if($domain['change'] >= 0)
@@ -266,6 +347,11 @@
                         </div>
                         @endforeach
                     </div>
+                    @else
+                    <div class="flex-1 flex items-center justify-center text-slate-400 text-sm">
+                        Data tidak ditemukan
+                    </div>
+                    @endif
                 </div>
 
             </div>
@@ -296,89 +382,142 @@
                 setSidebarCollapsed(!sidebar.classList.contains('sidebar-collapsed'));
             });
 
-            // Maturity Radar Chart
-            const maturityCtx = document.getElementById('maturityChart').getContext('2d');
-            new Chart(maturityCtx, {
-                type: 'radar',
-                data: {
-                    labels: @json($data['maturityIndex']['labels']),
-                    datasets: @json($data['maturityIndex']['datasets'])
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 5,
-                            ticks: { display: false },
-                            pointLabels: { font: { size: 10 } }
-                        }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
+            // SPBE Implementation Index Radar Chart (D2001-D2004 from TAUVAL)
+            const implementationCanvas = document.getElementById('implementationChart');
+            if (implementationCanvas) {
+                const implementationCtx = implementationCanvas.getContext('2d');
+                const implementationData = {
+                    labels: @json($data['implementationIndex']['labels'] ?? []),
+                    datasets: @json($data['implementationIndex']['datasets'] ?? [])
+                };
 
-            // SPBE Trend Line Chart
-            const spbeCtx = document.getElementById('spbeChart').getContext('2d');
-            new Chart(spbeCtx, {
-                type: 'line',
-                data: {
-                    labels: @json($data['spbeTrend']['labels']),
-                    datasets: @json($data['spbeTrend']['datasets'])
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // Pemdi Trend Line Chart
-            const pemdiCtx = document.getElementById('pemdiChart').getContext('2d');
-            new Chart(pemdiCtx, {
-                type: 'line',
-                data: {
-                    labels: @json($data['pemdiTrend']['labels']),
-                    datasets: @json($data['pemdiTrend']['datasets'])
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // Budget Bar Chart
-            const budgetCtx = document.getElementById('budgetChart').getContext('2d');
-            new Chart(budgetCtx, {
-                type: 'bar',
-                data: {
-                    labels: @json($data['budget']['labels']),
-                    datasets: @json($data['budget']['datasets'])
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) { return value + ' M'; }
+                new Chart(implementationCtx, {
+                    type: 'radar',
+                    data: implementationData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                top: 20,
+                                right: 20,
+                                bottom: 20,
+                                left: 20
+                            }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                min: 0,
+                                max: 5,
+                                ticks: {
+                                    display: true,
+                                    stepSize: 1,
+                                    font: { size: 8 },
+                                    color: '#94a3b8',
+                                    backdropColor: 'transparent',
+                                    padding: 2
+                                },
+                                pointLabels: {
+                                    font: { size: 9, weight: '500' },
+                                    color: '#64748b',
+                                    padding: 8
+                                },
+                                grid: {
+                                    color: 'rgba(148, 163, 184, 0.2)',
+                                    circular: true
+                                },
+                                angleLines: {
+                                    color: 'rgba(148, 163, 184, 0.2)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 11 },
+                                bodyFont: { size: 10 },
+                                padding: 8,
+                                displayColors: true
                             }
                         }
+                    }
+                });
+            }
+
+            // SPBE Trend Line Chart
+            const spbeCanvas = document.getElementById('spbeChart');
+            if (spbeCanvas) {
+                const spbeCtx = spbeCanvas.getContext('2d');
+                new Chart(spbeCtx, {
+                    type: 'line',
+                    data: {
+                        labels: @json($data['spbeTrend']['labels']),
+                        datasets: @json($data['spbeTrend']['datasets'])
                     },
-                    plugins: { legend: { display: false } },
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.8
-                }
-            });
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // Pemdi Trend Line Chart
+            const pemdiCanvas = document.getElementById('pemdiChart');
+            if (pemdiCanvas) {
+                const pemdiCtx = pemdiCanvas.getContext('2d');
+                new Chart(pemdiCtx, {
+                    type: 'line',
+                    data: {
+                        labels: @json($data['pemdiTrend']['labels']),
+                        datasets: @json($data['pemdiTrend']['datasets'])
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // Budget Bar Chart
+            const budgetCanvas = document.getElementById('budgetChart');
+            if (budgetCanvas) {
+                const budgetCtx = budgetCanvas.getContext('2d');
+                new Chart(budgetCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: @json($data['budget']['labels']),
+                        datasets: @json($data['budget']['datasets'])
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) { return value + ' M'; }
+                                }
+                            }
+                        },
+                        plugins: { legend: { display: false } },
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    }
+                });
+            }
         });
     </script>
 </body>
