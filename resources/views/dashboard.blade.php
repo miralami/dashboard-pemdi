@@ -162,13 +162,19 @@
                         Capaian Indeks Implementasi Arsitektur SPBE
                     </div>
                     @if(!empty($data['implementationIndex']['labels']) && !empty($data['implementationIndex']['datasets']))
-                    <div class="flex-1 flex gap-2">
-                        <div class="flex-1 relative" style="min-height: 200px;">
-                            <canvas id="implementationChart"></canvas>
+                    <div class="flex-1 flex flex-col">
+                        <div class="relative flex-1" style="min-height: 220px;">
+                            <canvas id="implementationChart" class="absolute inset-0 w-full h-full"></canvas>
                         </div>
-                        <div class="flex flex-col justify-center gap-2 pr-2">
-                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> <span class="text-[10px]">Instansi</span></div>
-                            <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background-color: rgb(37, 92, 153);"></span> <span class="text-[10px]">Nasional</span></div>
+                        <div class="mt-1 flex justify-center gap-6 text-[10px]">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-yellow-400 shadow-inner"></span>
+                                <span>Instansi</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full" style="background-color: rgb(37, 92, 153);"></span>
+                                <span>Nasional</span>
+                            </div>
                         </div>
                     </div>
                     @else
@@ -398,11 +404,12 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         layout: {
+                            // Ruang ekstra agar label (terutama bawah) tidak kepotong
                             padding: {
-                                top: 20,
-                                right: 20,
-                                bottom: 20,
-                                left: 20
+                                top: 5,
+                                right: 30,
+                                bottom: 28,
+                                left: 30
                             }
                         },
                         scales: {
@@ -413,36 +420,51 @@
                                 ticks: {
                                     display: true,
                                     stepSize: 1,
-                                    font: { size: 8 },
+                                    font: { size: 7 },
                                     color: '#94a3b8',
                                     backdropColor: 'transparent',
-                                    padding: 2
+                                    padding: 1
                                 },
                                 pointLabels: {
-                                    font: { size: 9, weight: '500' },
+                                    font: { size: 8, weight: '500' },
                                     color: '#64748b',
-                                    padding: 8
+                                    padding: 5
                                 },
                                 grid: {
-                                    color: 'rgba(148, 163, 184, 0.2)',
-                                    circular: true
+                                    color: 'rgba(148, 163, 184, 0.15)',
+                                    circular: true,
+                                    drawBorder: false
                                 },
                                 angleLines: {
-                                    color: 'rgba(148, 163, 184, 0.2)'
+                                    color: 'rgba(148, 163, 184, 0.15)'
                                 }
                             }
                         },
                         plugins: {
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true,
+                                    boxWidth: 6,
+                                    boxHeight: 6,
+                                    padding: 12,
+                                    font: { size: 9 },
+                                    color: '#64748b'
+                                }
                             },
                             tooltip: {
                                 enabled: true,
                                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                titleFont: { size: 11 },
-                                bodyFont: { size: 10 },
-                                padding: 8,
-                                displayColors: true
+                                titleFont: { size: 10 },
+                                bodyFont: { size: 9 },
+                                padding: 6,
+                                displayColors: true,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.r.toFixed(2);
+                                    }
+                                }
                             }
                         }
                     }
