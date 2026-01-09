@@ -3,15 +3,9 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 pt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 class="text-2xl font-bold text-gray-900 mb-6">Login</h1>
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">Register</h1>
 
         <div class="bg-white rounded-lg shadow-sm p-8 max-w-md">
-            @if (session('success'))
-                <div class="mb-4 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md text-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             @if ($errors->any())
                 <div class="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
                     <ul class="list-disc list-inside text-sm">
@@ -22,13 +16,22 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('register') }}">
                 @csrf
+
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-panrb-gold @error('name') border-red-500 @enderror" required>
+                    @error('name')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                     <input type="email" name="email" id="email" value="{{ old('email') }}"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-panrb-gold @error('email') border-red-500 @enderror" required autofocus>
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-panrb-gold @error('email') border-red-500 @enderror" required>
                     @error('email')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -41,20 +44,22 @@
                     @error('password')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
+                    <p class="text-gray-500 text-xs mt-1">Minimum 8 characters</p>
                 </div>
 
-                <div class="mb-6 flex items-center">
-                    <input type="checkbox" name="remember" id="remember" class="h-4 w-4 text-panrb-blue focus:ring-panrb-gold border-gray-300 rounded">
-                    <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                <div class="mb-6">
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                    <input type="password" name="password_confirmation" id="password_confirmation"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-panrb-gold" required>
                 </div>
 
                 <button type="submit" class="w-full bg-panrb-blue hover:bg-panrb-blue-dark text-white font-semibold py-2.5 rounded-md transition-colors">
-                    Login
+                    Register
                 </button>
 
                 <div class="mt-4 text-center text-sm text-gray-600">
-                    Don't have an account?
-                    <a href="{{ route('register') }}" class="text-panrb-blue hover:text-panrb-blue-dark font-medium">Register here</a>
+                    Already have an account?
+                    <a href="{{ route('login') }}" class="text-panrb-blue hover:text-panrb-blue-dark font-medium">Login here</a>
                 </div>
             </form>
         </div>

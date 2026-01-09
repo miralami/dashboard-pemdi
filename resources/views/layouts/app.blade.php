@@ -30,7 +30,19 @@
                 <!-- Navigation Links -->
                 <div class="flex items-center space-x-6">
                     <a href="{{ url('/') }}" class="text-white hover:text-panrb-gold-light transition-colors font-medium px-4 py-2 rounded-lg hover:bg-white/10">Home</a>
-                    <a href="{{ route('login') }}" class="text-white hover:bg-panrb-gold hover:text-panrb-blue-dark transition-all font-semibold px-6 py-2 rounded-lg border-2 border-white/50">Login</a>
+
+                    @auth
+                        <span class="text-white/80 text-sm">{{ Auth::user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-white hover:bg-red-600 hover:text-white transition-all font-semibold px-6 py-2 rounded-lg border-2 border-white/50">
+                                Logout
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="text-white hover:text-panrb-gold-light transition-colors font-medium px-4 py-2 rounded-lg hover:bg-white/10">Login</a>
+                        <a href="{{ route('register') }}" class="text-white hover:bg-panrb-gold hover:text-panrb-blue-dark transition-all font-semibold px-6 py-2 rounded-lg border-2 border-white/50">Register</a>
+                    @endauth
                 </div>
             </div>
         </nav>

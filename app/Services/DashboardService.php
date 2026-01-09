@@ -143,6 +143,9 @@ class DashboardService
                 // Build implementation index chart from TAUVAL data (D2001-D2004)
                 $architectureChart = $this->buildArchitectureChartFromTauval($nilai, $spbeData->tahun);
 
+                // Calculate budget data from clearance table
+                $budgetData = $this->calculateBudgetData($spbeData->nama_instansi);
+
                 // Build dashboard structure from spbe_data
                 return [
                     'profile' => [
@@ -170,10 +173,7 @@ class DashboardService
                         'labels' => [],
                         'datasets' => [],
                     ],
-                    'budget' => [
-                        'labels' => [],
-                        'datasets' => [],
-                    ],
+                    'budget' => $budgetData,
                     'nilai' => $nilai,
                     'tahun' => $spbeData->tahun,
                 ];
@@ -393,5 +393,70 @@ class DashboardService
 
             return $averages;
         });
+    }
+
+    /**
+     * Calculate budget data from clearance table
+     * Logic: Find institution name, sum all its budget entries
+     * First record initializes the total, subsequent records add (Dilanjutkan) or subtract (Tidak Dilanjutkan)
+     *
+     * @param string $institutionName
+     * @return array
+     */
+    private function calculateBudgetData(string $institutionName): array
+    {
+        // Get all clearance records for this institution
+        $clearanceRecords = \DB::table('clearance')
+            ->where('instansi', $institutionName)
+            ->orderBy('id')
+            ->get();
+
+        if ($clearanceRecords->isEmpty()) {
+            return [
+                'labels' => [],
+                'datasets' => [],
+            ];
+        }
+
+        $anggaranTotal = 0;
+        $anggaranDisetujui = 0;
+        $anggaranDitunda = 0;
+
+        foreach ($clearanceRecords as $record) {
+            $anggaran = (int) $record->anggaran;
+
+            // Total is sum of all budgets submitted
+            $anggaranTotal += $anggaran;
+
+            // Categorize by recommendation
+            if ($record->rekomendasi === 'Dilanjutkan') {
+                $anggaranDisetujui += $anggaran;
+            } else {
+                $anggaranDitunda += $anggaran;
+            }
+        }
+
+        // Convert to millions for display
+        $anggaranTotalM = round($anggaranTotal / 1000000, 2);
+        $anggaranDisetujuiM = round($anggaranDisetujui / 1000000, 2);
+        $anggaranDitundaM = round($anggaranDitunda / 1000000, 2);
+
+        return [
+            'labels' => ['Total', 'Disetujui', 'Ditunda'],
+            'datasets' => [
+                [
+                    'label' => 'Total',
+                    'data' => [$anggaranTotalM, 0, 0],
+                ],
+                [
+                    'label' => 'Disetujui',
+                    'data' => [0, $anggaranDisetujuiM, 0],
+                ],
+                [
+                    'label' => 'Ditunda',
+                    'data' => [0, 0, $anggaranDitundaM],
+                ],
+            ],
+        ];
     }
 }
